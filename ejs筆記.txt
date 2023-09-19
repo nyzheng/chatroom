@@ -1,0 +1,99 @@
+npm install -D ejs
+
+ EJS 核心
+const engine = require("ejs-locals");
+app.engine("ejs", engine);
+ 讀取 EJS 檔案位置
+app.set("views", "./views");
+ 用 EJS 引擎跑模板
+app.set("view engine", "ejs");
+
+完成核心程式碼後，就在 /views 資料夾下新建一個 ejs 檔案，需要注意的地方是附檔名一定要打 ejs。
+ejs內容可以像在打 HTML 一樣建立頁面
+
+res.render() 渲染 ejs 檔案
+app.get("/", (req, res) => {
+  res.render("index");
+});
+
+安裝套件  npm install -D ejs-locals
+
+EJS Tags
+
+
+<%
+Script標籤，裡面可以放JS語法
+
+<%_
+Html標籤，裡面可以放HTML語法
+
+<%=
+輸出值（value）
+
+%>
+結束用的tag
+
+<%-
+輸出unescaped value
+
+
+
+EJS Includes
+Includes tag可以將檔案導入ejs中，像是網站中有固定的header或footer，我們可以先把檔案獨立出來寫好，最後再導入ejs中 
+ <%- include('../articles/header'); %>
+
+
+//use 每次都會執行
+//get 請求才會執行
+
+const router = require("./router/router");
+
+router.get("/", (req, res) => {
+  if (!req.session.info) {
+    req.session.info = {
+      logined: false,
+    };
+  }
+
+  if (req.session.info.logined === false) {
+    res.send("你沒登入");
+  } else {
+    res.send("登入中");
+  }
+});
+
+router.get("/xxx", (req, res) => {
+  req.session.info.logined = true;
+  console.log("登入::");
+  console.log(req.session);
+  res.send("成功登入");
+});
+
+router.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.send("成功登出");
+});
+
+router.use((req, res, next) => {
+  if (!req.session.info) {
+    req.session.info = {
+      logined: false,
+    };
+  }
+  res.send("6666");
+  next();
+});
+
+router.get(
+  "/",
+  (req, res, next) => {
+    if (!req.session.info.logined) {
+      next();
+    } else {
+      res.send("還沒登入");
+    }
+  },
+  (req, res, next) => {
+    res.send("登入");
+  }
+);

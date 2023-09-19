@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0505 </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            width: 100%;
+            height: 100%
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            /* position: relative; */
+            background: #333;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            /* 水平置中 */
+            align-items: center;
+            /* 垂直置中 */
+        }
+
+        .playerList {
+            position: fixed;
+            /* display: flex   ; */
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #fff;
+        }
+
+        .player1 {
+            display: flex;
+            font-size: 25px;
+            margin: 20px;
+        }
+
+        .player2 {
+            display: flex;
+            font-size: 25px;
+            margin: 20px;
+        }
+
+        #player1 {
+            background-color: green;
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            margin: 5px;
+        }
+
+        #player2 {
+            background-color: red;
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            margin: 5px;
+
+        }
+
+        .map {
+
+            width: 450px;
+            height: 450px;
+            background-color: #ccc;
+            display: grid;
+            grid-template-columns: repeat(3, 150px);
+            grid-template-rows: repeat(3, 150px);
+            border-collapse: collapse;
+            border-radius: 15px;
+        }
+
+        .box {
+            border: 10px solid white;
+            box-sizing: border-box;
+            margin: 10px;
+            border-radius: 10px;
+        }
+
+
+        .red {
+            background-color: red;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .over {
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            opacity: 0.6;
+            position: fixed;
+            top: 0;
+            left: 0;
+
+        }
+
+        .gameOver {
+            text-align: center;
+            font-size: 50px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .restartButton {
+            position: absolute;
+            top: 90%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            background: #333;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #fff;
+
+
+        }
+
+
+        .leave {
+            position: fixed;
+            width: 20%;
+            height: 48px;
+            right: 0;
+            bottom: 0;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            background: #333;
+        }
+
+        #homeButton {
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #fff;
+            box-sizing: border-box;
+            width: 63px;
+            height: 32px;
+            background-color: rgba(114, 114, 114);
+        }
+
+        .waitContainer {
+            position: absolute;
+            width: 100%;
+            height: 460px;
+            background-color: white;
+            opacity: 0.6;
+            position: fixed;
+            top: 125px;
+            left: 0;
+        }
+
+        .wait {
+            text-align: center;
+            font-size: 50px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+        }
+
+        .startContainer {
+            position: fixed;
+            width: 100%;
+            height: 460px;
+            top: 125px;
+            background-color: white;
+            opacity: 0.6;
+            position: fixed;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .startButton {
+            width: 100px;
+            height: 48px;
+            top: 50%;
+            left: 47%;
+            background-color: rgb(78, 78, 78);
+            color: white;
+            opacity: 0.6;
+            position: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            font-size: 30px;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div class="playerList">
+        <div class="player1">
+            <div id="player1"></div>
+            <p>player1 : </p>
+        </div>
+        <div class="player2">
+            <div id="player2"></div>
+            <p>player2 : </p>
+        </div>
+
+    </div>
+
+    <div class="container">
+        <div class="waitContainer">
+            <div class="wait"> Waiting...
+            </div>
+        </div>
+
+        <div class="startContainer">
+            <button class="startButton">Start</button>
+        </div>
+
+
+        <div class="map">
+            <div class="box" id="0"></div>
+            <div class="box" id="1"></div>
+            <div class="box" id="2"></div>
+            <div class="box" id="3"></div>
+            <div class="box" id="4"></div>
+            <div class="box" id="5"></div>
+            <div class="box" id="6"></div>
+            <div class="box" id="7"></div>
+            <div class="box" id="8"></div>
+        </div>
+
+        <div class="leave">
+            <button id="homeButton">離開</button>
+        </div>
+
+        <div class="over">
+            <div class="gameOver"> Game Over
+                <button class="restartButton">Restart</button>
+            </div>
+
+
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        //一開始隱藏結束遊戲    
+        document.querySelector('.over').style.display = 'none';
+        //一開始隱藏開始遊戲
+        document.querySelector('.startContainer').style.display = 'none';
+
+
+
+        const socket = io();
+
+
+
+
+
+        socket.on("connectionExceed", function () {
+            // 人數超過，執行相應的操作
+            alert("玩家已滿!");
+            // 將使用者導回首頁（這裡使用 JavaScript 的方式跳轉，你也可以使用其他方法）
+            window.location.href = "/";
+        });
+        socket.on('start', function () {
+            document.querySelector('.startContainer').style.display = 'block';
+            document.querySelector('.waitContainer').style.display = 'none';
+        })
+
+        socket.on('wait', function () {
+            document.querySelector('.waitContainer').style.display = 'block ';
+        })
+
+
+
+        socket.on('player1', function (player1Name) {
+            let player1Paragraph = document.querySelector('.player1 p');
+            player1Paragraph.innerHTML = `player1: ${player1Name}`;
+        });
+
+        socket.on('player2', function (player2Name) {
+            let player2Paragraph = document.querySelector('.player2 p');
+            player2Paragraph.innerHTML = `player2: ${player2Name}`;
+        });
+
+
+        socket.on('removePlayer1', function (player1Name) {
+            let player1Paragraph = document.querySelector('.player1 p');
+            player1Paragraph.innerHTML = `player1: ${player1Name}`;
+
+        })
+
+        socket.on('removePlayer2', function (player2Name) {
+            let player2Paragraph = document.querySelector('.player2 p');
+            player2Paragraph.innerHTML = `player2: ${player2Name}`;
+        })
+
+
+
+        const startButton = document.querySelector('.startButton');
+        startButton.addEventListener('click', () => {
+            socket.emit('restartGame')
+        });
+        socket.on('go', function () {
+            document.querySelector('.startContainer').style.display = 'none';
+        })
+
+
+
+
+
+
+        const map = document.querySelector('.map');
+        const boxes = document.querySelectorAll('.box');
+        map.addEventListener('click', (event) => {
+            let target = event.target;
+
+            if (target.classList.contains('box')) {
+                let boxId = target.id;
+                socket.emit('boxClick1', boxId);
+                socket.emit('boxClick2', boxId);
+            }
+        });
+
+        socket.on('statusUpdate', function (status) {
+            // 遍歷所有格子
+            // 因為有收到後端傳來的status
+            //假裝這裡有status: [null, null, null, null, null, null, null, null, null]
+            boxes.forEach(function (box, index) {
+                //判斷陣列裡面的狀態，決定給予class的分類
+                if (status[index] === true) {
+                    box.classList.remove('red');
+                    box.classList.add('green');
+                } else if (status[index] === false) {
+                    box.classList.remove('green');
+                    box.classList.add('red');
+                }
+            })
+        })
+
+        socket.on("circleWin", function () {
+            // 更新前端畫面，顯示圈圈勝利
+            document.querySelector(".over").style.display = "block";
+            console.log("圈圈勝利");
+        });
+
+        socket.on("crossWin", function () {
+            // 更新前端畫面，顯示叉叉勝利
+            document.querySelector(".over").style.display = "block";
+            console.log("叉叉勝利");
+        });
+
+        socket.on("draw", function () {
+            // 更新前端畫面，顯示叉叉勝利
+            document.querySelector(".over").style.display = "block";
+            console.log("平手");
+        });
+
+
+
+
+
+        // 監聽restart按鈕，發送給後端
+        document.querySelector('.restartButton').addEventListener('click', () =>
+            socket.emit('restartGame')
+        );
+        socket.on('reset', function () {
+            // 移除所有div的顏色分類
+            boxes.forEach(box => {
+                if (box.classList.contains('red')) {
+                    box.classList.remove('red');
+                }
+                if (box.classList.contains('green')) {
+                    box.classList.remove('green');
+                }
+            });
+            //關掉結束遊戲畫面
+            document.querySelector('.over').style.display = 'none';
+        })
+
+
+        window.addEventListener('DOMContentLoaded', function () {
+            // 找到按鈕元素
+            let homeButton = document.getElementById('homeButton');
+
+            // 監聽按鈕的點擊事件
+            homeButton.addEventListener('click', function () {
+                // 使用 window.location 導航至首頁
+                window.location.href = '/';
+            });
+        });
+    </script>
+
+</body>
+
+</html>

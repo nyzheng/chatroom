@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        首頁
+    </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            position: relative;
+            background-color: rgb(58, 59, 60);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin-top: auto;
+            background-color: rgb(51, 205, 74);
+            border-radius: 5px;
+            padding: 10px;
+
+            /* 水平置中 */
+
+        }
+
+        h1 {
+            text-align: center;
+            padding: 5px;
+        }
+
+        .account {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .login {
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .menu {
+            padding: 20px;
+            display: flex;
+        }
+
+        .function {
+            padding: 5px;
+            border-radius: 10px;
+            background-color: rgb(172, 172, 172);
+            margin: 10px;
+        }
+
+
+        a {
+            text-decoration: none;
+            color: black;
+
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>
+            <%= title %>
+        </h1>
+        <form action="/login" method="post">
+            <% if (showInputs) { %>
+                <div class="account">
+                    <label for="account">帳號：</label>
+                    <input type="text" name="account" id="account" value="">
+                </div>
+                <div>
+                    <div class="account">
+                        <label for="password">密碼：</label>
+                        <input type="text" name="password" id="password" value="">
+                    </div>
+                    <div class="login">
+                        <input type="submit" value="登入">
+                    </div>
+                    <% } %>
+        </form>
+        <div class="menu">
+            <div class="function">
+                <a href="/register">
+                    <%= registerText %>
+
+                </a>
+            </div>
+            <div class="function">
+                <a href="/logOut">
+                    <%= logOut %>
+
+                </a>
+            </div>
+            <div class="function">
+                <a href="/chat">
+                    <%= chat %>
+
+                </a>
+            </div>
+            <div class="function">
+                <a href="/update">
+                    <%= change %>
+                </a>
+            </div>
+
+            <div class="function">
+                <a href="/ooxx">
+                    <%= OOXX %>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

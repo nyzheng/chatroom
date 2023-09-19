@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 3rem;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+
+
+        li::marker {
+            color: rgb(22, 207, 22);
+            font-size: 20px;
+        }
+
+        .memberList {
+            font-size: 20px;
+
+        }
+
+        .members-box {
+            position: fixed;
+            top: 25px;
+            right: 0;
+            width: 20%;
+            height: 100%;
+            background-color: #969494;
+            padding: 1rem;
+            box-sizing: border-box;
+            overflow-y: scroll;
+        }
+
+        .members-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+
+        }
+
+        .members-list-item {
+            margin-bottom: 0.5rem;
+        }
+
+
+
+        #form {
+            background: rgba(0, 0, 0, 0.15);
+            padding: 0.25rem;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            height: 3rem;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+            width: 80%;
+        }
+
+        #input {
+            border: none;
+            padding: 0 1rem;
+            flex-grow: 1;
+            border-radius: 2rem;
+            margin: 0.25rem;
+        }
+
+        #input:focus {
+            outline: none;
+        }
+
+        #form>button {
+            background: #333;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #fff;
+        }
+
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 80%;
+            white-space: normal;
+            overflow-wrap: break-word;
+        }
+
+
+        #messages>li {
+            padding: 0.5rem 1rem;
+
+        }
+
+        #messages>li:nth-child(odd) {
+            background: #efefef;
+        }
+
+
+
+        .online-box {
+            position: fixed;
+            color: white;
+            background-color: rgba(114, 114, 114);
+            width: 20%;
+            height: 25px;
+            text-align: center;
+            right: 0;
+        }
+
+        .leave {
+            position: fixed;
+            width: 20%;
+            height: 48px;
+            right: 0;
+            bottom: 0;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            background-color: rgba(114, 114, 114);
+        }
+
+
+        #homeButton {
+            background: #333;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #fff;
+            box-sizing: border-box;
+            width: 63px;
+            height: 32px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="members-box" id="membersBox"></div>
+        <div class="online-box">
+            <span id="online">
+                0
+            </span>
+            <span id="online2">
+                online
+            </span>
+        </div>
+        <div class="list">
+            <ul id="messages"></ul>
+            <div class="input">
+                <form id="form" action="">
+                    <input id="input" autocomplete="off" /><button class="button-effect">Send</button>
+
+                </form>
+            </div>
+        </div>
+        <div class="leave">
+            <button id="homeButton">離開</button>
+        </div>
+    </div>
+    <!-- 請求的位置 -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        //建立 Socket.IO 的客戶端實例，並連線到伺服器。這行程式碼假設伺服器位於當前網頁所在的伺服器上。
+
+
+        const messages = document.getElementById('messages');
+        //獲取具有 ID 為 "messages" 的 HTML 元素，用於顯示聊天訊息。
+
+        const form = document.getElementById('form');
+        //獲取表單元素，用於監聽使用者的提交事件。
+
+        const input = document.getElementById('input');
+        //獲取輸入框元素，用於獲取使用者輸入的訊息。
+
+        const online = document.getElementById("online");
+        //獲取'online'的HTML 元素，用於顯示線上人數。
+
+        const membersBox = document.getElementById("membersBox");
+
+
+
+        //刪除線上成員
+        function removeElementsByClass(className) {
+            const elements = document.getElementsByClassName(className);
+            while (elements.length > 0) {
+                elements[0].remove();
+            }
+        }
+
+
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            //阻止表單的預設提交行為，避免頁面重新載入。
+            if (input.value) {
+                //檢查輸入框是否有值
+                socket.emit("chat message", input.value);
+                //使用 Socket.IO 的客戶端實例發送自訂的事件 'chat message'，並將使用者輸入的訊息作為資料傳送給伺服器。
+                input.value = '';
+                //將輸入框的值清空
+            }
+        });
+
+        socket.on("online", function (amount) {
+            online.innerText = amount;
+        });
+
+        socket.on('members', function (mem) {
+            removeElementsByClass('memberList');
+            for (let i = 0; i < mem.length; i++) {
+                var item = document.createElement('li');
+                item.classList.add('memberList')
+                item.id = mem[i].id;
+                item.textContent = mem[i].name
+                membersBox.appendChild(item);
+            }
+        })
+
+
+        socket.on("chat message", function (msg) {
+            var item = document.createElement('li');
+            //建立一個 <li> 元素，用於顯示單條聊天訊息。
+            item.textContent = msg;
+            //設定 <li> 元素的內容為收到的訊息。
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+            //將視窗捲動到頁面最底部，以顯示最新的訊息。
+        });
+
+
+        socket.on("new user", function (username) {
+            var item = document.createElement('li');
+            item.textContent = `歡迎: ${username}`;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        socket.on("chat history", function (history) {
+            for (var i = 0; i < history.length; i++) {
+                var item = document.createElement('li');
+                item.textContent = history[i];
+                messages.appendChild(item);
+            }
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+
+        // 在頁面載入完成後執行
+        window.addEventListener('DOMContentLoaded', function () {
+            // 找到按鈕元素
+            let homeButton = document.getElementById('homeButton');
+
+            // 監聽按鈕的點擊事件
+            homeButton.addEventListener('click', function () {
+                // 使用 window.location 導航至首頁
+                window.location.href = '/';
+            });
+        });
+
+
+
+    </script>
+</body>
+
+</html>

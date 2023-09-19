@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>使用者註冊</h1>
+    <form action="/register-request" method="post" id="registrationForm">
+        <label for="account">帳號：</label>
+        <input type="text" id="account" name="account" value=""><br>
+        <label for="password">密碼：</label>
+        <input type="password" id="password" name="password" value=""><br>
+        <label for="checkPassword">確認密碼：</label>
+        <input type="password" id="checkPassword" name="checkPassword" value=""><br>
+        <label for="name">姓名：</label>
+        <input type="text" id="name" name="name" value="    "><br>
+        <button type="submit">註冊</button>
+    </form>
+    <div><a href="/">回首頁</a></div>
+    <!-- <script>
+        // action="/register-request" method="post"
+        const registrationForm = document.getElementById("registrationForm");
+
+        registrationForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const accountInput = document.getElementById("account");
+            const passwordInput = document.getElementById("password");
+            const nameInput = document.getElementById("name");
+
+            const formData = {
+                account: accountInput.value,
+                password: passwordInput.value,
+                name: nameInput.value
+            };
+
+            try {
+                const response = await fetch("/register-request", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    console.log("註冊成功");
+                    // 在此處執行註冊成功後的處理邏輯
+                } else {
+                    console.error("註冊失敗");
+                    // 在此處處理註冊失敗的情況
+                }
+            } catch (error) {
+                console.error("發生錯誤", error);
+                // 在此處處理其他錯誤情況
+            }
+        });
+    </script> -->
+</body>
+
+</html>
